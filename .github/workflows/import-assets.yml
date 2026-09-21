@@ -1,0 +1,57 @@
+name: Import portfolio assets
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-assets.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  import-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download portfolio media
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/images
+          base="https://emmjay-portfolio.emmjaymedia1.chatgpt.site/images"
+          files=(
+            "4db2e573-b5c1-4261-882a-f9e1b78b4e7d.png"
+            "2d632892-49cf-434c-be13-afa224b16376.png"
+            "dbf86f5e-b289-4027-aba6-a38b07853921.png"
+            "df836590-9367-457c-ab2f-7a6dd27edaa2.png"
+            "5fd7f2ce-d8ad-491f-bd2c-0c5f5a49068a.png"
+            "75a0176a-a0fa-4924-95f4-e618b1ae562f.png"
+            "81f91eaa-bfa6-4501-871b-86b17746d622.png"
+            "ba5df88e-0b1a-486c-b7ee-a64c864cfedb.png"
+            "kuwo-feature.png"
+            "aviway-feature.png"
+            "motion-design-poster.jpg"
+            "motion-design.mp4"
+            "about-findr-phone.png"
+            "about-nigerian-made.png"
+            "about-portrait.jpeg"
+            "about-coinn.png"
+            "about-greenfield.png"
+            "about-findr-billboards.png"
+            "profile-portrait.png"
+          )
+          for file in "${files[@]}"; do
+            curl --fail --location --retry 3 --retry-delay 2 "$base/$file" --output "dist/images/$file"
+          done
+
+      - name: Commit imported media
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/images
+          git diff --cached --quiet && exit 0
+          git commit -m "Import portfolio media assets"
+          git push
