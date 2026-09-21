@@ -1,0 +1,8 @@
+{
+  "name": "a-majid-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"require('node:fs').accessSync('dist/index.html')\""
+  }
+}
