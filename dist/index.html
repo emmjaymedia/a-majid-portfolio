@@ -17,6 +17,25 @@
     @media(max-width:900px){.hero{height:850px}.intro{margin-top:100px}.intro h1{font-size:clamp(34px,5vw,43px)}.work-ribbon{top:540px}.ribbon-group{gap:18px;padding-right:18px}.ribbon-tile{width:260px;height:250px;border-radius:14px}.showcase{padding:90px 0}.showcase h2,.about h2{font-size:clamp(40px,7vw,64px);margin-bottom:48px}.project-media{height:auto;aspect-ratio:1128/590}.project-meta h3{font-size:clamp(26px,4vw,42px)}.project-meta span{font-size:15px}.project-list{gap:76px}.about{height:auto;padding:90px 0 100px}.about-lead,.about-story{font-size:clamp(20px,3.2vw,28px)}.tag{font-size:16px;height:50px}.tags{gap:12px;margin-top:38px}.divider{margin:48px 0}.about-ribbon{margin-top:72px}.about-group{gap:18px;padding-right:18px}.about-tile{width:240px;height:300px}.contact{min-height:auto;padding:90px 0 0}.contact h2{font-size:clamp(48px,9vw,100px);margin-bottom:55px}.footer-links{margin-top:65px}.footer-line{margin-top:65px}}
     @media(max-width:600px){.wrap{width:calc(100% - 40px)}.hero{height:710px}.nav{height:54px;padding:5px 7px 5px 14px;margin-top:14px;font-size:12px}.nav-side{gap:9px}.nav-side:first-child a:nth-child(2),.nav-side:last-child a:nth-child(2){display:none}.brand{height:42px;min-width:106px;font-size:18px}.brand i{font-size:16px;margin-right:4px}.intro{margin-top:88px}.avatar{width:42px;height:42px}.identity strong{font-size:15px}.identity small{font-size:11px}.intro h1{font-size:clamp(32px,8vw,42px);margin:27px 0 18px;letter-spacing:-.055em}.intro p{font-size:15px;max-width:340px}.hero-actions{gap:8px;margin-top:25px}.pill{height:38px;padding:0 12px;font-size:12px}.work-ribbon{top:520px}.ribbon-group{gap:12px;padding-right:12px}.ribbon-tile{width:164px;height:170px;border-radius:12px}.showcase{padding:65px 0 72px}.showcase h2,.about h2{font-size:38px;margin-bottom:34px}.project-list{gap:57px}.project-media{border-radius:12px;font-size:16px}.project-meta{margin-top:12px;align-items:flex-start;flex-direction:column;gap:5px}.project-meta h3{font-size:27px}.project-meta span{font-size:13px}.about{padding:70px 0 75px}.about h2{margin-bottom:30px}.about-lead,.about-story{font-size:18px;line-height:1.43;letter-spacing:-.015em}.tags{gap:8px;margin-top:30px}.tag{height:40px;padding:0 12px;font-size:12px}.tag-symbol{font-size:16px}.divider{margin:36px 0}.about-ribbon{margin-top:50px}.about-group{gap:12px;padding-right:12px}.about-tile{width:150px;height:190px;border-radius:13px}.contact{padding:75px 0 0}.contact h2{font-size:clamp(43px,11vw,65px);margin-bottom:43px}.contact-button{font-size:16px;height:48px}.footer-links{flex-wrap:wrap;gap:8px 12px;font-size:14px;margin-top:55px}.footer-line{margin-top:55px;padding:20px 0;gap:12px;font-size:10px}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.contact-button{transition:none}.contact-button:hover{transform:none}.hero-actions .pill-dark{transition:none}.hero-actions .pill-dark:hover{transform:none}.project-media-image img,.project-open{transition:none}}
+
+    /* Featured project accordion: progressively enhanced by JavaScript. */
+    .project-list.accordion-ready{gap:0}
+    .accordion-ready .project{border-top:1px solid #dedede}
+    .accordion-ready .project:last-child{border-bottom:1px solid #dedede}
+    .project-heading{margin:0}
+    .project-toggle{width:100%;display:flex;align-items:center;gap:24px;justify-content:space-between;padding:30px 0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
+    .project-toggle-title{font-size:clamp(27px,4vw,42px);font-weight:700;letter-spacing:-.055em;line-height:1.08}
+    .project-toggle-category{margin-left:auto;font-size:18px;font-weight:600}
+    .project-toggle-icon{width:32px;flex:none;font-size:32px;font-weight:400;text-align:center;transition:transform .35s ease}
+    .project-toggle[aria-expanded="true"] .project-toggle-icon{transform:rotate(45deg)}
+    .project-toggle:hover .project-toggle-title{text-decoration:underline;text-underline-offset:5px}
+    .project-panel{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1),visibility .45s}
+    .project-panel.is-open{grid-template-rows:1fr;visibility:visible}
+    .project-panel-inner{min-height:0;overflow:hidden}
+    .project-panel-content{padding:0 0 32px}
+    .accordion-ready .project-open{opacity:1;transform:none}
+    @media(max-width:600px){.project-toggle{padding:22px 0;gap:12px;flex-wrap:wrap}.project-toggle-title{flex:1}.project-toggle-category{order:3;width:100%;margin-left:0;font-size:13px}.project-toggle-icon{font-size:28px;width:28px}.project-panel-content{padding-bottom:22px}.accordion-ready .project-open{right:12px;bottom:12px;padding:9px 12px;font-size:13px}}
+    @media(prefers-reduced-motion:reduce){.project-panel,.project-toggle-icon{transition:none}}
   </style>
 </head>
 <body>
@@ -63,6 +82,75 @@
     </div>
   </main>
   <script>
+    (() => {
+      const list = document.querySelector('.project-list');
+      const projects = Array.from(list.querySelectorAll(':scope > .project'));
+      const entries = projects.map((project, index) => {
+        const meta = project.querySelector('.project-meta');
+        const heading = meta.querySelector('h3');
+        const category = meta.querySelector('span');
+        const title = heading.textContent;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'project-toggle';
+        button.id = 'project-toggle-' + index;
+        button.setAttribute('aria-expanded', String(index === 0));
+        button.setAttribute('aria-controls', 'project-panel-' + index);
+        const label = document.createElement('span');
+        label.className = 'project-toggle-title';
+        label.textContent = title;
+        button.append(label);
+        if (category) {
+          category.className = 'project-toggle-category';
+          button.append(category);
+        }
+        const icon = document.createElement('span');
+        icon.className = 'project-toggle-icon';
+        icon.textContent = '+';
+        icon.setAttribute('aria-hidden', 'true');
+        button.append(icon);
+        heading.className = 'project-heading';
+        heading.replaceChildren(button);
+        meta.remove();
+        const panel = document.createElement('div');
+        panel.id = 'project-panel-' + index;
+        panel.className = 'project-panel' + (index === 0 ? ' is-open' : '');
+        panel.setAttribute('role', 'region');
+        panel.setAttribute('aria-labelledby', button.id);
+        panel.inert = index !== 0;
+        const inner = document.createElement('div');
+        inner.className = 'project-panel-inner';
+        const content = document.createElement('div');
+        content.className = 'project-panel-content';
+        content.append(...Array.from(project.childNodes));
+        inner.append(content);
+        panel.append(inner);
+        project.append(heading, panel);
+        const video = panel.querySelector('video');
+        const setOpen = (open) => {
+          button.setAttribute('aria-expanded', String(open));
+          panel.classList.toggle('is-open', open);
+          panel.inert = !open;
+          if (video) {
+            if (open && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          }
+        };
+        if (video) video.pause();
+        return { button, setOpen };
+      });
+      entries.forEach(entry => {
+        entry.button.addEventListener('click', () => {
+          const open = entry.button.getAttribute('aria-expanded') !== 'true';
+          entries.forEach(other => other.setOpen(other === entry && open));
+        });
+      });
+      list.classList.add('accordion-ready');
+    })();
+
     (() => {
       const motion = matchMedia('(prefers-reduced-motion: reduce)');
       for (const selector of ['.work-ribbon', '.about-ribbon']) {
