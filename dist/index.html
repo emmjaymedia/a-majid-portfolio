@@ -86,6 +86,61 @@
   </main>
   <script>
 
+    // Match image frames to their artwork, including newly added or replaced images.
+    (() => {
+      const selector = '.project-media img, .ribbon-tile img, .about-tile img';
+      const watched = new WeakSet();
+      const colors = new Map();
+      function blend(img) {
+        if (!img.naturalWidth) return;
+        const frame = img.closest('.project-media, .ribbon-tile, .about-tile');
+        if (!frame) return;
+        try {
+          const key = img.currentSrc || img.src;
+          let background = colors.get(key);
+          if (!background) {
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 32;
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            if (!ctx) return;
+            ctx.drawImage(img, 0, 0, 32, 32);
+            const pixels = ctx.getImageData(0, 0, 32, 32).data;
+            function edgeColor(side) {
+              const sum = [0, 0, 0];
+              let weight = 0;
+              for (let y = 0; y < 32; y++) {
+                for (let x = side; x < side + 2; x++) {
+                  const i = (y * 32 + x) * 4;
+                  const alpha = pixels[i + 3] / 255;
+                  weight += alpha;
+                  sum.forEach((_, c) => { sum[c] += pixels[i + c] * alpha; });
+                }
+              }
+              return weight ? 'rgb(' + sum.map(v => Math.round(v / weight)).join(',') + ')' : null;
+            }
+            const left = edgeColor(0), right = edgeColor(30);
+            if (!left || !right) return;
+            background = 'linear-gradient(90deg,' + left + ',' + right + ')';
+            colors.set(key, background);
+          }
+          frame.style.background = background;
+        } catch (_) {
+          // Retain the designed fallback when an external image blocks pixel access.
+        }
+      }
+      function scan() {
+        document.querySelectorAll(selector).forEach(img => {
+          if (watched.has(img)) return;
+          watched.add(img);
+          img.addEventListener('load', () => blend(img));
+          if (img.complete) blend(img);
+        });
+      }
+      scan();
+      new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+    })();
+
+
     (() => {
       const cards = Array.from(document.querySelectorAll('.project-list > .project'));
       const motion = matchMedia('(prefers-reduced-motion: reduce)');
