@@ -1,0 +1,179 @@
+-- Import existing projects after schema.sql and before connecting the frontend.
+insert into public.portfolio_projects select * from jsonb_populate_recordset(null::public.portfolio_projects, $portfolio$[
+  {
+    "id": "millo-travel-tours",
+    "slug": "millo-travel-tours",
+    "title": "Millo Travel & Tours",
+    "category": "Brand Identity",
+    "year": 2026,
+    "cover": "/images/81f91eaa-bfa6-4501-871b-86b17746d622.png",
+    "alt": "Millo Travel and Tours brand identity displayed over a coastal landscape",
+    "description": "Explore the Millo Travel & Tours project and its visual presentation.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "View on Behance",
+        "url": "https://www.behance.net/gallery/251976461/Millo-Travel-and-Tours-Agency"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 0
+  },
+  {
+    "id": "nigerian-made",
+    "slug": "nigerian-made",
+    "title": "Nigerian Made",
+    "category": "Brand Identity",
+    "year": 2026,
+    "cover": "/images/ba5df88e-0b1a-486c-b7ee-a64c864cfedb.png",
+    "alt": "Nigerian Made brand identity over a portrait of a textile maker",
+    "description": "Explore the Nigerian Made project and its visual presentation.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "View on Behance",
+        "url": "https://www.behance.net/gallery/248192995/Nigerian-Made"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 1
+  },
+  {
+    "id": "kuwo",
+    "slug": "kuwo",
+    "title": "Kuwo",
+    "category": "Product Design",
+    "year": 2026,
+    "cover": "/images/kuwo-feature.png",
+    "alt": "Kuwo fintech app branding on two mobile screens",
+    "description": "Explore the Kuwo project and its visual presentation.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "View on Behance",
+        "url": "https://www.behance.net/gallery/249708147/Kuwo-Fintech-App"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 2
+  },
+  {
+    "id": "aviway",
+    "slug": "aviway",
+    "title": "Aviway",
+    "category": "Product Engineering",
+    "year": 2026,
+    "cover": "/images/aviway-feature.png",
+    "alt": "Aviway private aviation homepage with a jet at dusk",
+    "description": "Explore the Aviway project and its visual presentation.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "Visit live website",
+        "url": "https://aviway-elevate.lovable.app/"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 3
+  },
+  {
+    "id": "forma",
+    "slug": "forma",
+    "title": "Forma",
+    "category": "UIUX & Frontend Dev",
+    "year": 2026,
+    "cover": "/images/forma-feature.jpg",
+    "alt": "Forma creative studio homepage with bold typography and blue accents",
+    "description": "A creative studio website exploring expressive typography, a clear project presentation and responsive frontend interactions.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "Visit live website",
+        "url": "https://forma-studio-puce-eight.vercel.app/"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 4
+  },
+  {
+    "id": "zest",
+    "slug": "zest",
+    "title": "Zest",
+    "category": "UIUX & Frontend Dev",
+    "year": 2026,
+    "cover": "/images/zest-feature.jpg",
+    "alt": "Zest sparkling drink homepage with a fruit drink can and playful typography",
+    "description": "A sparkling drink landing page built around changing flavours, colourful product visuals and responsive interactions.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "Visit live website",
+        "url": "https://zest-landing-page-one.vercel.app/"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 5
+  },
+  {
+    "id": "clario",
+    "slug": "clario",
+    "title": "Clario",
+    "category": "Qatar \u00b7 Product Design & Frontend Dev",
+    "year": 2026,
+    "cover": "/images/clario-feature.jpg",
+    "alt": "Clario on-screen assistant homepage with cream background, violet mascot, and Join the waitlist button",
+    "description": "A product and website experience introducing an on-screen assistant and inviting visitors to join the waitlist.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "Visit live website",
+        "url": "https://www.clario.click/"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 6
+  },
+  {
+    "id": "dalo-crm",
+    "slug": "dalo-crm",
+    "title": "Dalo CRM",
+    "category": "Product Design (UIUX)",
+    "year": 2026,
+    "cover": "/images/dalo-crm-feature.webp",
+    "alt": "Dalo CRM English and Arabic mobile screens for GCC property sales teams on a yellow background",
+    "description": "An AI-assisted mobile CRM concept for GCC property sales teams, with English and Arabic interfaces for managing leads, follow-ups and property viewings.",
+    "problem": "",
+    "solution": "",
+    "stack": [],
+    "links": [
+      {
+        "label": "View on Behance",
+        "url": "https://www.behance.net/gallery/257250997/Darlo-CRM"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 7
+  }
+]$portfolio$::jsonb) on conflict(id) do nothing;

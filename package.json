@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "node -e \"require('node:fs').accessSync('dist/index.html')\""
+    "build": "node scripts/check.mjs",
+    "dev": "python scripts/dev.py",
+    "test": "node scripts/check.mjs"
   }
 }

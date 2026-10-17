@@ -3,5 +3,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/projects/:slug",
+      "destination": "/case-study.html"
+    }
+  ]
 }
