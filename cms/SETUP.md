@@ -24,3 +24,7 @@ Run `npm run dev`, then open http://localhost:8080. Run `npm test` and `npm run 
 ## Provisioning status
 
 Supabase is provisioned, schema and seed applied, public configuration connected, and the security advisor returned no notices. Anonymous readers and authenticated non-editors are restricted by RLS. Editor-account creation and the signed-in upload/save/publish flow remain pending. GitHub auto-deploys to Vercel; direct Vercel account access returned 403 for team `emmjaymedia1-2632`. Only the public Supabase key is included in the frontend.
+
+## Dashboard workflow
+
+Sign-in opens the overview with total, live and draft counts, project thumbnails, search and visibility filtering. Edit opens a separate editor. Confirmed saves return to the overview and show a dismissible success notification; errors keep the editor and entered content visible. Counts update from confirmed saved records.

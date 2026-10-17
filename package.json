@@ -5,6 +5,9 @@
   "scripts": {
     "build": "node scripts/check.mjs",
     "dev": "python scripts/dev.py",
-    "test": "node scripts/check.mjs"
+    "test": "node scripts/check.mjs && node scripts/dashboard-test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
   }
 }
