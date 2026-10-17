@@ -15,3 +15,6 @@ const full=study({...projects[0],problem:'A problem',solution:'A solution',stack
 for(const text of ['The problem','The solution','Tools & technologies','Caption'])assert.ok(full.includes(text));
 assert.equal(safeURL('javascript:alert(1)'), '');assert.equal(safeURL('data:text/html,test',true),'');
 console.log('PASS: project migration, assets, optional case-study sections, safe URLs and escaped content.');
+
+const config=JSON.parse(readFileSync("vercel.json"));
+if(config.cleanUrls) for(const rule of config.rewrites||[]) assert.ok(!rule.destination.endsWith(".html"), "Clean-URL rewrite destinations must omit .html");
