@@ -28,3 +28,7 @@ Supabase is provisioned, schema and seed applied, public configuration connected
 ## Dashboard workflow
 
 Sign-in opens the overview with total, live and draft counts, project thumbnails, search and visibility filtering. Edit opens a separate editor. Confirmed saves return to the overview and show a dismissible success notification; errors keep the editor and entered content visible. Counts update from confirmed saved records.
+
+## Website content
+
+The Website content tab edits hero/navigation text, profile image, resume link, availability, About copy, service and skill lists, both image carousels (upload/replace/remove/reorder), project heading, showreel video URL and cover, contact details, social links, footer, browser title and description. Blank text is hidden. Sections can be hidden using visibility switches. Content is stored in the singleton `portfolio_site_content` row, with editor-only updates and public reads. Saves use a revision check to avoid overwriting changes from another browser. Initial content is retained in `dist/site-content.json`; `cms/site-content-schema.sql` documents the applied schema.

@@ -1,0 +1,127 @@
+{
+  "identity": "Abdulmajeed Abdurraheem",
+  "role": "Front-end Developer + Product Designer",
+  "heroTitle": "I design brands & digital products, and build web & mobile app experiences that bring them to life.",
+  "heroDescription": "Over ten years across design and technology, connecting thoughtful UX with responsive web development and mobile app experiences.",
+  "brand": "A. Majid",
+  "navAbout": "About",
+  "navProjects": "Projects",
+  "navWork": "Work",
+  "navContact": "Contact",
+  "resumeLabel": "My Resume",
+  "resumeUrl": "https://drive.google.com/file/d/1gWmlpZr61Lb1C-sMsSVtduzqTefaUIm5/view?usp=sharing",
+  "availability": "Available for Projects",
+  "avatar": "/images/profile-portrait.png",
+  "avatarAlt": "",
+  "projectsHeading": "Featured Projects*",
+  "showreelTitle": "Motion Design Showreel",
+  "showreelUrl": "/images/motion-design.mp4",
+  "showreelPoster": "/images/motion-design-poster.jpg",
+  "aboutHeading": "About me",
+  "aboutLead": "I design and build digital products and brands that help people understand a business, trust what it offers, and know what to do next. My work connects UI/UX and brand design with web and mobile app development using JavaScript, TypeScript, React, React Native, Angular, Next.js, and Vue.js. I build responsive web interfaces, mobile app screens, reusable components, and design systems, with attention to accessibility and performance. I also work across motion design and video editing, manage projects and guide products from concept to launch, connecting the creative work with the decisions and delivery needed to make it real.",
+  "toolkitHeading": "Front-end toolkit",
+  "toolkitDescription": "From web and mobile interface design to working products: reusable components, state management, API integration, and responsive styling.",
+  "aboutStory": "Being a father has made me more intentional about what I build and the impact it has on people. I bring that same care to product and brand design, product engineering, motion design, and video editing, while managing projects across IT, creative, construction, and operations. Whether I\u2019m shaping a product or leading a team, I focus on making ideas clear, useful, and well executed. I can help you with:",
+  "contactHeading": "Let\u2019s build you\nsomething really cool",
+  "contactLabel": "Shoot me an email",
+  "email": "abdulmajidabdurrahim@yahoo.com",
+  "copyright": "\u00a9 A. Majid 2026",
+  "credit": "Built with \u2615, Figma & Codex",
+  "pageTitle": "A. Majid \u2014 Front-end Development & Product Design",
+  "metaDescription": "Abdulmajeed Abdurraheem is a front-end developer and product designer building web and mobile app experiences with JavaScript, TypeScript, React, Angular, and Next.js.",
+  "services": [
+    "Brand Design",
+    "Product Design",
+    "Web & Mobile Development",
+    "Product Management",
+    "Motion Design"
+  ],
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "React Native",
+    "Angular",
+    "Next.js",
+    "Vue.js",
+    "Nuxt.js",
+    "HTML5",
+    "CSS3 / SCSS",
+    "Tailwind CSS",
+    "Redux Toolkit",
+    "Git / GitHub"
+  ],
+  "heroImages": [
+    {
+      "url": "/images/4db2e573-b5c1-4261-882a-f9e1b78b4e7d.png",
+      "alt": "Chess knight and iridescent orb artwork"
+    },
+    {
+      "url": "/images/2d632892-49cf-434c-be13-afa224b16376.png",
+      "alt": "Green wearable band concept"
+    },
+    {
+      "url": "/images/dbf86f5e-b289-4027-aba6-a38b07853921.png",
+      "alt": "Millo Travel and Tours branding"
+    },
+    {
+      "url": "/images/df836590-9367-457c-ab2f-7a6dd27edaa2.png",
+      "alt": "Indices Studios tote bag branding"
+    },
+    {
+      "url": "/images/5fd7f2ce-d8ad-491f-bd2c-0c5f5a49068a.png",
+      "alt": "Nigerian Made campaign design"
+    },
+    {
+      "url": "/images/75a0176a-a0fa-4924-95f4-e618b1ae562f.png",
+      "alt": "AppleDirect social profile mockup"
+    }
+  ],
+  "aboutImages": [
+    {
+      "url": "/images/about-findr-phone.png",
+      "alt": "Findr social profile design"
+    },
+    {
+      "url": "/images/about-nigerian-made.png",
+      "alt": "Nigerian Made artist campaign"
+    },
+    {
+      "url": "/images/about-portrait.jpeg",
+      "alt": "Abdulmajeed outdoors"
+    },
+    {
+      "url": "/images/about-coinn.png",
+      "alt": "Coinn smartwatch design"
+    },
+    {
+      "url": "/images/about-greenfield.png",
+      "alt": "GreenField brand identity badges"
+    },
+    {
+      "url": "/images/about-findr-billboards.png",
+      "alt": "Findr outdoor advertising design"
+    }
+  ],
+  "socials": [
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/abdulmajid-abdurrahim-167397147/"
+    },
+    {
+      "label": "Twitter (X)",
+      "url": "https://x.com/designby_mj?s=11"
+    },
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/abdulmajidabdurrahim?stkn=NThvYXZ3bmZyZ2M1&utm_source=qr"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/emmjaymedia"
+    }
+  ],
+  "showContact": true,
+  "showProjects": true,
+  "showAbout": true
+}
