@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/projects/:slug",
-      "destination": "/case-study.html"
+      "destination": "/case-study"
     }
   ]
 }
