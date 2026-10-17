@@ -1,6 +1,6 @@
 # Portfolio Studio setup
 
-The public portfolio and all eight case studies work without a content service. `/admin` is the private editor interface; it remains disabled until configured. No local-browser-only save is presented as a published change.
+The public portfolio is connected to Supabase project `auwbtikrngvcwntsaxxq` (a-majid-portfolio-cms). All eight projects have been imported. `/admin` is the private editor interface. An approved editor account still needs to be created before sign-in can be verified. No local-browser-only save is presented as a published change.
 
 ## Connect persistent content
 
@@ -21,6 +21,6 @@ Existing project descriptions are deliberately brief. Problem/solution statement
 
 Run `npm run dev`, then open http://localhost:8080. Run `npm test` and `npm run build` before committing. The development server handles `/projects/:slug` and `/admin` like Vercel.
 
-## Access limitation in this session
+## Provisioning status
 
-GitHub writes work, but the connected Vercel account returned 403 for team `emmjaymedia1-2632`. The Vercel CLI was not available. Supabase provisioning, editor-account creation and live permission tests remain pending; no backend credentials are included in the repository.
+Supabase is provisioned, schema and seed applied, public configuration connected, and the security advisor returned no notices. Anonymous readers and authenticated non-editors are restricted by RLS. Editor-account creation and the signed-in upload/save/publish flow remain pending. GitHub auto-deploys to Vercel; direct Vercel account access returned 403 for team `emmjaymedia1-2632`. Only the public Supabase key is included in the frontend.
