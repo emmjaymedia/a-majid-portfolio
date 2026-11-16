@@ -1,8 +1,8 @@
 {
-  "identity": "Abdulmajeed Abdurraheem",
+  "identity": "Abdulmajid Abdurrahim",
   "role": "Software Engineer + Product Designer",
   "heroTitle": "Different hats.\nOne product mindset.",
-  "heroDescription": "I design and build digital products, connecting thoughtful user experiences with the engineering that brings them to life.",
+  "heroDescription": "I connect product design, software engineering, IT, and project delivery to turn complex ideas into useful digital experiences.",
   "brand": "A. Majid",
   "navAbout": "About",
   "navProjects": "Projects",
@@ -18,7 +18,7 @@
   "showreelUrl": "/images/motion-design.mp4",
   "showreelPoster": "/images/motion-design-poster.jpg",
   "aboutHeading": "One person.\nMany ways to build.",
-  "aboutLead": "I design and build digital products and brands that help people understand a business, trust what it offers, and know what to do next. My work connects UI/UX and brand design with web and mobile app development using JavaScript, TypeScript, React, React Native, Angular, Next.js, and Vue.js. I build responsive web interfaces, mobile app screens, reusable components, and design systems, with attention to accessibility and performance. I also work across motion design and video editing, manage projects and guide products from concept to launch, connecting the creative work with the decisions and delivery needed to make it real.",
+  "aboutLead": "I’m Abdulmajid Abdurrahim, a software engineer, product designer, and project professional based in Doha, Qatar. My work connects user needs, business goals, and technical delivery—from shaping user journeys and interfaces to building applications and coordinating the work that brings them to life. I work across React, Next.js, TypeScript, back-end integrations, and workplace IT, with experience spanning creative studios, technology products, energy, and operations.",
   "toolkitHeading": "Front-end toolkit",
   "toolkitDescription": "From web and mobile interface design to working products: reusable components, state management, API integration, and responsive styling.",
   "aboutStory": "Being a father has made me more intentional about what I build and the impact it has on people. I bring that same care to product and brand design, product engineering, motion design, and video editing, while managing projects across IT, creative, construction, and operations. Whether I’m shaping a product or leading a team, I focus on making ideas clear, useful, and well executed. I can help you with:",
@@ -28,13 +28,13 @@
   "copyright": "© A. Majid 2026",
   "credit": "Built with ☕, Figma & Codex",
   "pageTitle": "A. Majid — Design, Engineering & Technology",
-  "metaDescription": "A. Majid is a software engineer and product designer based in Doha, Qatar. Explore front-end, back-end, full-stack, AI, product design, and IT expertise.",
+  "metaDescription": "Abdulmajid Abdurrahim — software engineer, product designer, and project professional in Doha, Qatar. Explore eight expertise areas, projects, experience, and certifications.",
   "services": [
-    "Brand Design",
+    "Software Engineering",
     "Product Design",
-    "Web & Mobile Development",
-    "Product Management",
-    "Motion Design"
+    "Front-end Development",
+    "Project Management",
+    "IT & Cloud Administration"
   ],
   "skills": [
     "JavaScript",
@@ -106,7 +106,7 @@
   "socials": [
     {
       "label": "LinkedIn",
-      "url": "https://www.linkedin.com/in/abdulmajid-abdurrahim-167397147/"
+      "url": "https://www.linkedin.com/in/abdulmajid-abdurrahim/"
     },
     {
       "label": "Twitter (X)",
