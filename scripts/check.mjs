@@ -2,7 +2,7 @@ import {readFileSync,existsSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 const projects=JSON.parse(readFileSync('dist/projects.json'));
-assert.equal(projects.length,8);assert.equal(new Set(projects.map(p=>p.slug)).size,8);
+assert.ok(projects.length >= 8);assert.equal(new Set(projects.map(p=>p.slug)).size,projects.length);
 for(const p of projects){assert.match(p.slug,/^[a-z0-9]+(-[a-z0-9]+)*$/);assert.ok(existsSync('dist'+p.cover));assert.ok(p.description);}
 // Test rendering with malicious content and optional sections, without a browser or network.
 let source=readFileSync('dist/cms-data.js','utf8').replace(/export /g,'');

@@ -135,7 +135,7 @@
     "id": "clario",
     "slug": "clario",
     "title": "Clario",
-    "category": "Qatar \u00b7 Product Design & Frontend Dev",
+    "category": "Qatar · Product Design & Frontend Dev",
     "year": 2026,
     "cover": "/images/clario-feature.jpg",
     "alt": "Clario on-screen assistant homepage with cream background, violet mascot, and Join the waitlist button",
@@ -174,5 +174,31 @@
     "gallery": [],
     "published": true,
     "sort_order": 7
+  },
+  {
+    "id": "vora-studio",
+    "slug": "vora-studio",
+    "title": "VORA Studio",
+    "category": "Front-end Development · Astro",
+    "year": 2026,
+    "cover": "/images/vora-studio-feature.webp",
+    "alt": "VORA Studio hero artwork",
+    "description": "A multi-page studio portfolio built with Astro, TypeScript, and Tailwind CSS. The personal project combines responsive layouts, content-driven project and journal pages, a hero film, and considered motion with reduced-motion support.",
+    "problem": "",
+    "solution": "",
+    "stack": [
+      "Astro",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "links": [
+      {
+        "label": "Visit live website",
+        "url": "https://vora-studio-sable.vercel.app/"
+      }
+    ],
+    "gallery": [],
+    "published": true,
+    "sort_order": 8
   }
 ]
