@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meeting Notes to Action Tracker | Abdulmajid Abdurrahim</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f4ee;color:#172b2a;font:16px/1.55 system-ui,sans-serif}main{max-width:1060px;margin:auto;padding:3rem 1.5rem}a{color:#16453b}h1{font-size:clamp(2.7rem,7vw,5.2rem);letter-spacing:-.065em;line-height:1;margin:.5rem 0 1rem}h2,h3{line-height:1.2}.eyebrow{color:#315f56;font-weight:750}section{margin-top:2rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:1rem}.panel{background:white;border:1px solid #d8e1dc;border-radius:16px;padding:1.25rem}label{font-weight:750}select,button{font:inherit;padding:.6rem .8rem;border-radius:8px}select{width:100%;background:white;border:1px solid #82938c;margin:.4rem 0}button{background:#16453b;color:white;border:0;cursor:pointer}:focus-visible{outline:3px solid #ac5816;outline-offset:3px}#notes{white-space:pre-wrap}small{color:#39564e}article{border-top:1px solid #d8e1dc;margin-top:1rem}article p{margin:.5rem 0}article h3{margin:.75rem 0 .4rem}
+</style>
+<main>
+<a href="/#automation">Back to workflow projects</a>
+<p class="eyebrow">Workflow automation · Abdulmajid Abdurrahim</p>
+<h1>Meeting Notes<br>to Action Tracker</h1>
+<p>Turn agreed next steps into action rows with owners, deadlines, and the excerpt that supports each action.</p>
+<section class="grid" aria-label="Interactive replay">
+<div class="panel"><h2>Meeting notes</h2><label for="meeting">Choose a meeting</label><select id="meeting"></select><p id="notes"></p><button id="run">Extract actions</button><p><small>This replay uses predefined extraction responses.</small></p></div>
+<div class="panel"><h2>Action tracker</h2><div id="result" aria-live="polite"></div></div>
+</section>
+<section><h2>How it works</h2><p>Make reads new meeting notes from Google Sheets. OpenAI extracts the next steps. A validation step checks the source excerpts and flags missing owners or deadlines before Make adds the actions to the tracker.</p><a href="https://github.com/emmjaymedia/a-majid-portfolio/tree/master/automation/meeting-action-tracker">View workflow source and setup</a></section>
+</main>
+<script>
+function validate(input) {
+const { meeting_id, notes, model_response } = input;
+if (typeof meeting_id !== 'string' || !/^[A-Za-z0-9_-]{1,60}$/.test(meeting_id)) {
+  throw new Error('Use a stable meeting ID of up to 60 letters, digits, hyphens or underscores.');
+}
+if (typeof notes !== 'string' || !notes.trim()) throw new Error('Meeting notes are required.');
+const extracted = JSON.parse(model_response);
+if (!Array.isArray(extracted?.actions)) throw new Error('Expected an actions array.');
+const seen = new Set();
+const rows = [];
+const clean = value => typeof value === 'string' ? value.trim() : '';
+for (const entry of extracted.actions) {
+  const action = clean(entry?.action);
+  const evidence = clean(entry?.evidence);
+  if (!action || !evidence || !notes.includes(evidence)) throw new Error('Every action needs a verbatim excerpt from the notes.');
+  const key = JSON.stringify([action.toLowerCase(), evidence]);
+  if (seen.has(key)) continue;
+  seen.add(key);
+  const words = text => text.toLowerCase().match(/[\p{L}\p{N}]+/gu)?.join(' ') ?? '';
+  const supported = value => words(value) && (' ' + words(evidence) + ' ').includes(' ' + words(value) + ' ');
+  const owner = clean(entry.owner);
+  const due = clean(entry.due);
+  const confirmedOwner = supported(owner) ? owner : '';
+  const confirmedDue = supported(due) ? due : '';
+  const review = [!confirmedOwner && 'Owner', !confirmedDue && 'Due date'].filter(Boolean).join(', ');
+  rows.push({ meeting_id, action, owner: confirmedOwner, due: confirmedDue, evidence, status: review ? 'Needs review' : 'Ready to track', missing: review });
+}
+return { rows };
+
+}
+const cases = [{"id":"M-301","title":"Website launch check-in","notes":"Maya will send the final homepage copy by 2026-11-23.\nOmar will test the enquiry form.\nThe team discussed a new tagline but made no decision.","actions":[{"action":"Send the final homepage copy","owner":"Maya","due":"2026-11-23","evidence":"Maya will send the final homepage copy by 2026-11-23."},{"action":"Test the enquiry form","owner":"Omar","due":"","evidence":"Omar will test the enquiry form."}]},{"id":"M-302","title":"Operations handover","notes":"The team agreed to update the onboarding checklist by Friday.\nLina will publish the support rota by 2026-11-25.","actions":[{"action":"Update the onboarding checklist","owner":"","due":"Friday","evidence":"The team agreed to update the onboarding checklist by Friday."},{"action":"Publish the support rota","owner":"Lina","due":"2026-11-25","evidence":"Lina will publish the support rota by 2026-11-25."}]},{"id":"M-303","title":"Weekly design review","notes":"The team reviewed both concepts and selected the second direction. The icon set was already finalized.","actions":[]}];
+const meeting = document.querySelector('#meeting');
+const result = document.querySelector('#result');
+for (const item of cases) meeting.add(new Option(item.title));
+function renderNotes() {
+ document.querySelector('#notes').textContent = cases[meeting.selectedIndex].notes;
+ result.textContent = 'Run the replay to see the action rows.';
+}
+meeting.addEventListener('change', renderNotes);
+renderNotes();
+document.querySelector('#run').addEventListener('click', () => {
+ const item = cases[meeting.selectedIndex];
+ const {rows} = validate({meeting_id:item.id, notes:item.notes, model_response:JSON.stringify({actions:item.actions})});
+ if (!rows.length) { result.textContent = 'No agreed actions to track.'; return; }
+ const cards = rows.map(row => {
+  const card = document.createElement('article');
+  const heading = document.createElement('h3');
+  heading.textContent = row.action;
+  card.append(heading);
+  for (const text of [row.status + (row.missing ? ' · Missing ' + row.missing.toLowerCase() : ''), 'Owner: ' + (row.owner || 'Unassigned') + ' · Due: ' + (row.due || 'Unspecified'), 'From the notes: “' + row.evidence + '”']) {
+   const p = document.createElement('p');
+   p.textContent = text;
+   card.append(p);
+  }
+  return card;
+ });
+ result.replaceChildren(...cards);
+});
+</script>
