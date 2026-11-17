@@ -1,0 +1,5 @@
+[
+ {"id":"M-301","title":"Website launch check-in","notes":"Maya will send the final homepage copy by 2026-11-23.\nOmar will test the enquiry form.\nThe team discussed a new tagline but made no decision.","actions":[{"action":"Send the final homepage copy","owner":"Maya","due":"2026-11-23","evidence":"Maya will send the final homepage copy by 2026-11-23."},{"action":"Test the enquiry form","owner":"Omar","due":"","evidence":"Omar will test the enquiry form."}]},
+ {"id":"M-302","title":"Operations handover","notes":"The team agreed to update the onboarding checklist by Friday.\nLina will publish the support rota by 2026-11-25.","actions":[{"action":"Update the onboarding checklist","owner":"","due":"Friday","evidence":"The team agreed to update the onboarding checklist by Friday."},{"action":"Publish the support rota","owner":"Lina","due":"2026-11-25","evidence":"Lina will publish the support rota by 2026-11-25."}]},
+ {"id":"M-303","title":"Weekly design review","notes":"The team reviewed both concepts and selected the second direction. The icon set was already finalized.","actions":[]}
+]
