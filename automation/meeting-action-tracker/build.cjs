@@ -1,0 +1,17 @@
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const code = fs.readFileSync('make-code.js','utf8');
+const cases = JSON.parse(fs.readFileSync('cases.json','utf8'));
+const run = new Function('input',code);
+const process = (sample, actions = sample.actions) => run({meeting_id:sample.id, notes:sample.notes, model_response:JSON.stringify({actions})}).rows;
+const [first,second,empty] = cases;
+assert.deepEqual(process(first).map(row => row.status),['Ready to track','Needs review']);
+assert.equal(process(first)[1].missing,'Due date');
+assert.equal(process(second)[0].missing,'Owner');
+assert.equal(process(empty).length,0);
+assert.equal(process(first,[first.actions[0],first.actions[0]]).length,1);
+assert.equal(process(first,[{...first.actions[0],due:'2026-11-24'}])[0].due,'');
+assert.throws(() => process(first,[{...first.actions[0],evidence:'Not in the notes'}]));
+assert.throws(() => run({meeting_id:first.id, notes:first.notes, model_response:'broken'}));
+fs.writeFileSync('index.html',fs.readFileSync('replay.template','utf8').replace('/* CODE */',()=>code).replace('/* CASES */',()=>JSON.stringify(cases)));
+console.log('Eight action tracker checks passed');
