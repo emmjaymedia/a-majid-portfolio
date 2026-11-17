@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weekly Operations Brief | Abdulmajid Abdurrahim</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f4ee;color:#172b2a;font:16px/1.55 system-ui,sans-serif}main{max-width:990px;margin:auto;padding:3rem 1.5rem}a{color:#16453b}h1{font-size:clamp(2.7rem,7vw,5rem);letter-spacing:-.06em;line-height:1;margin:.5rem 0 1rem}.eyebrow{color:#315f56;font-weight:750}.panel{background:white;border:1px solid #d8e1dc;border-radius:16px;padding:1.25rem;margin:1rem 0}h2{margin-top:0}button{background:#16453b;color:white;border:0;border-radius:8px;padding:.65rem 1rem;font:inherit;cursor:pointer;margin-right:.4rem;margin-top:.4rem}:focus-visible{outline:3px solid #ac5816;outline-offset:3px}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:.55rem .3rem;border-bottom:1px solid #d8e1dc}.scroll{overflow-x:auto}small{color:#39564e}
+</style>
+<main>
+<a href="/#automation">Back to workflow projects</a>
+<p class="eyebrow">Workflow automation · Abdulmajid Abdurrahim</p>
+<h1>Weekly Operations Brief</h1>
+<p>Compare two weeks of operational metrics and draft follow-up suggestions.</p>
+<section class="panel">
+<h2>Weekly metrics</h2>
+<div class="scroll"><table><thead><tr><th>Week starting</th><th>Opened</th><th>Closed</th><th>Overdue</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p><small>The replay uses fictional metrics and predefined AI suggestions.</small></p>
+<button id="run">Generate brief</button><button id="fallback">Replay without AI suggestions</button>
+</section>
+<section class="panel" aria-live="polite"><h2>Operations brief</h2><div id="result">Generate the brief to compare weeks.</div></section>
+<a href="https://github.com/emmjaymedia/a-majid-portfolio/tree/master/automation/weekly-operations-brief">View workflow source and setup</a>
+</main>
+<script>
+/* CODE */
+const example = /* EXAMPLE */;
+const make=(tag,text)=>{const el=document.createElement(tag);el.textContent=text;return el;};
+for (const row of example.rows) { const tr=make('tr','');tr.append(...Object.values(row).map(v=>make('td',v)));document.querySelector('#rows').append(tr); }
+function render(response) {
+ const report=brief(metrics(example.rows),response);
+ const list=make('ul','');
+ for (const item of report.items) list.append(make('li',item.metric+': '+item.current+' vs '+item.previous+' ('+(item.change>0?'+':'')+item.change+')'));
+ const suggestions=make('ul','');
+ for(const line of report.suggestions) suggestions.append(make('li',line));
+ document.querySelector('#result').replaceChildren(make('p','Week of '+report.week+' compared with '+report.previous),list,
+  ...(report.suggestions.length?[make('h3','Suggested follow-up'),suggestions]:[make('p','AI suggestions unavailable. Calculated metrics are still available.')]));
+}
+document.querySelector('#run').onclick=()=>render(JSON.stringify({highlights:example.notes}));
+document.querySelector('#fallback').onclick=()=>render('');
+</script>
