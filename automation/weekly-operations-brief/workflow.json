@@ -1,0 +1,176 @@
+{
+  "name": "Weekly Operations Brief",
+  "nodes": [
+    {
+      "name": "Run now",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "parameters": {},
+      "id": "029239b0-ff30-49e3-9c7f-0e6ebf1a1c19",
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "name": "Read weekly metrics",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Weekly Metrics",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "8ae67a79-851e-4cdd-bf13-9e4a75af500f",
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "name": "Calculate metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "function metrics(rows) {\n const weeks=new Map();\n for(const row of rows) {\n  const week=String(row.week).trim();\n  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(week)) throw Error('Use YYYY-MM-DD for week');\n  const date=new Date(week+'T00:00:00Z');\n  if(!Number.isFinite(+date)||date.toISOString().slice(0,10)!==week||date.getUTCDay()!==1||weeks.has(week)) throw Error('Each Monday needs a unique row');\n  const values={};\n  for(const key of ['opened','closed','overdue']) {\n   if(!/^\\d+$/.test(String(row[key]).trim())||!Number.isSafeInteger(Number(row[key]))) throw Error('Metrics must be non-negative whole numbers');\n   values[key]=Number(row[key]);\n  }\n  weeks.set(week,values);\n }\n const [current,previous]=[...weeks.keys()].sort().reverse();\n if(!previous||Date.parse(current)-Date.parse(previous)!==604800000) throw Error('Supply two consecutive weeks');\n const latest=weeks.get(current), prior=weeks.get(previous);\n return {current,previous,latest,prior,changes:Object.fromEntries(Object.keys(latest).map(key=>[key,latest[key]-prior[key]]))};\n}\nreturn [{json:metrics($input.all().map(item=>item.json))}];"
+      },
+      "id": "0b4346d3-0159-4f0f-8c43-d51d18d543db",
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "name": "Draft follow-up suggestions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:\"gpt-4o-mini\",messages:[{role:\"system\",content:\"Draft up to two suggested next steps for an operations team based only on the metrics provided. Do not infer causes, write or spell out quantities, or make factual statements. Return a JSON object with highlights, an array of objects containing metric (opened, closed, or overdue) and focus (a short suggested action).\"},{role:\"user\",content:JSON.stringify($json)}],response_format:{type:\"json_object\"}}) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "7e92948c-4094-4bab-9973-3e149605426e",
+      "position": [
+        720,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "name": "Assemble brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "function brief(data,response) {\n let highlights=[];\n try { highlights=JSON.parse(response).highlights; } catch {}\n const labels={opened:'Items opened',closed:'Items closed',overdue:'Items overdue'};\n const items=Object.keys(labels).map(key=>({metric:labels[key],current:data.latest[key],previous:data.prior[key],change:data.changes[key]}));\n const suggestions=Array.isArray(highlights)?highlights.filter(note=>typeof note?.metric==='string'&&Object.hasOwn(labels,note.metric)&&typeof note.focus==='string'&&note.focus.trim()&&!/\\p{N}/u.test(note.focus)).slice(0,2).map(note=>labels[note.metric]+': '+note.focus.trim().slice(0,180)):[];\n return {week:data.current,previous:data.previous,items,suggestions};\n}\nconst data = $('Calculate metrics').first().json;\nconst response = $input.first().json.choices?.[0]?.message?.content;\nreturn [{json:brief(data,response)}];"
+      },
+      "id": "502a6d89-2eb7-43ed-ac27-8dbe468ef978",
+      "position": [
+        960,
+        300
+      ]
+    },
+    {
+      "name": "Every Monday",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 9,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "e6bab4de-7fc0-4318-b977-375f0ff9d93b",
+      "position": [
+        0,
+        520
+      ]
+    }
+  ],
+  "connections": {
+    "Run now": {
+      "main": [
+        [
+          {
+            "node": "Read weekly metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read weekly metrics": {
+      "main": [
+        [
+          {
+            "node": "Calculate metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate metrics": {
+      "main": [
+        [
+          {
+            "node": "Draft follow-up suggestions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft follow-up suggestions": {
+      "main": [
+        [
+          {
+            "node": "Assemble brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Monday": {
+      "main": [
+        [
+          {
+            "node": "Read weekly metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Qatar"
+  }
+}
