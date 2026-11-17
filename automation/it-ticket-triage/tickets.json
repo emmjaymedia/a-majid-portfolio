@@ -1,0 +1,47 @@
+[
+  {
+    "ticket_id": "TKT-001",
+    "subject": "Locked out after replacing my phone",
+    "description": "I can no longer complete Microsoft 365 MFA after replacing my phone.",
+    "expected": {
+      "category": "Account Access",
+      "urgency": "Normal"
+    }
+  },
+  {
+    "ticket_id": "TKT-002",
+    "subject": "Payroll application will not start",
+    "description": "The payroll team cannot launch the payroll application and payroll is due today.",
+    "expected": {
+      "category": "Software",
+      "urgency": "High"
+    }
+  },
+  {
+    "ticket_id": "TKT-003",
+    "subject": "Monitor stays black",
+    "description": "My external monitor stays black even after reseating the cable. My laptop screen works.",
+    "expected": {
+      "category": "Equipment",
+      "urgency": "Normal"
+    }
+  },
+  {
+    "ticket_id": "TKT-004",
+    "subject": "Something is broken",
+    "description": "It is broken again. Please help.",
+    "expected": {
+      "category": "Unclear",
+      "urgency": "Unknown"
+    }
+  },
+  {
+    "ticket_id": "TKT-005",
+    "subject": "How do I reach the help desk?",
+    "description": "Where can I find the IT support hours and contact details?",
+    "expected": {
+      "category": "General Support",
+      "urgency": "Normal"
+    }
+  }
+]
