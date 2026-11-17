@@ -1,0 +1,16 @@
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const source = fs.readFileSync('normalize.js', 'utf8');
+const cases = JSON.parse(fs.readFileSync('cases.json', 'utf8'));
+const zap = new Function('inputData', fs.readFileSync('code-by-zapier.js','utf8'));
+assert.equal(fs.readFileSync('code-by-zapier.js','utf8'), source + '\nreturn normalizeEnquiry(inputData, inputData.model_response);\n');
+const leads = cases.map(item => zap({...item, model_response:JSON.stringify(item.model)}));
+assert.equal(leads[0].lead_status, 'Ready for review');
+assert.equal(leads[1].missing_details, 'Budget, Timeline');
+assert.match(leads[1].follow_up_draft, /share your budget and timeline/);
+assert.equal(leads[2].missing_details, 'Timeline');
+assert.equal(zap({model_response:'malformed'}).lead_status, 'Needs manual drafting');
+assert.equal(zap({model_response:'{"category":"Unexpected","summary":"Test","draft":"Test"}'}).follow_up_draft, '');
+const page = fs.readFileSync('replay.template', 'utf8').replace('/* NORMALIZE */', () => source).replace('/* CASES */', () => JSON.stringify(cases));
+fs.writeFileSync('index.html', page);
+console.log('Passed six local checks');

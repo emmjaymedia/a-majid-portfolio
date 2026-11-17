@@ -1,0 +1,23 @@
+[
+  {
+    "company": "Harborline Studio",
+    "message": "We want a five-page portfolio website that our team can update.",
+    "budget": "$4,000–$6,000",
+    "timeline": "Six weeks",
+    "model": {"category":"Website","summary":"Five-page portfolio site with an editable content system.","draft":"Thanks for getting in touch. A five-page portfolio site with an editable content system sounds like a good starting point. Could you share your current site, if you have one?"}
+  },
+  {
+    "company": "Juniper Works",
+    "message": "We spend every Friday copying website enquiries into a spreadsheet. Can you automate it?",
+    "budget": "",
+    "timeline": "",
+    "model": {"category":"Workflow Automation","summary":"Automate weekly transfer of website enquiries into a spreadsheet.","draft":"Thanks for reaching out. Could you tell me which platform hosts your enquiry form and what columns you track in the spreadsheet?"}
+  },
+  {
+    "company": "Cedar House",
+    "message": "We are launching a café and need a visual identity.",
+    "budget": "$2,500",
+    "timeline": "",
+    "model": {"category":"Brand Identity","summary":"Visual identity for an upcoming café launch.","draft":"Thanks for getting in touch. Could you share a short description of the café and who you hope to attract?"}
+  }
+]

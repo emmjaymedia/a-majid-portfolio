@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Client Enquiry to Sales Pipeline | Abdulmajid Abdurrahim</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f4ee;color:#172b2a;font:16px/1.55 system-ui,sans-serif}main{max-width:1060px;margin:auto;padding:3rem 1.5rem}a{color:#16453b}h1{font-size:clamp(2.7rem,7vw,5.2rem);letter-spacing:-.065em;line-height:1;margin:.5rem 0 1rem}h2{line-height:1.2}.eyebrow{color:#315f56;font-weight:750}section{margin-top:2rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:1rem}.panel{background:white;border:1px solid #d8e1dc;border-radius:16px;padding:1.25rem}label,dt{font-weight:750}select,button{font:inherit;padding:.6rem .8rem;border-radius:8px}select{width:100%;background:white;border:1px solid #82938c;margin:.4rem 0}button{background:#16453b;color:white;border:0;cursor:pointer}:focus-visible{outline:3px solid #ac5816;outline-offset:3px}dd{margin:0 0 .6rem;white-space:pre-wrap}small{color:#39564e}
+</style>
+<main>
+<a href="/#automation">Back to workflow projects</a>
+<p class="eyebrow">Workflow automation · Abdulmajid Abdurrahim</p>
+<h1>Client Enquiry<br>to Sales Pipeline</h1>
+<p>Turn website enquiries into structured leads and prepare follow-up drafts for review.</p>
+<section class="grid" aria-label="Interactive replay">
+<div class="panel"><h2>Incoming enquiry</h2><label for="enquiry">Choose an enquiry</label><select id="enquiry"></select><p id="message"></p><p id="details"></p><button id="run">Prepare lead</button><p><small>This replay uses predefined classifier responses.</small></p></div>
+<div class="panel"><h2>Lead record</h2><div id="result" aria-live="polite"></div></div>
+</section>
+<section>
+<h2>How it works</h2>
+<ol><li>Zapier Forms captures an enquiry in Zapier Tables.</li><li>OpenAI classifies the service request, summarizes it, and drafts a reply.</li><li>Zapier checks for missing budget and timeline details and updates the original lead for review.</li></ol>
+<a href="https://github.com/emmjaymedia/a-majid-portfolio/tree/master/automation/client-enquiry-pipeline">View workflow source and setup</a>
+</section>
+</main>
+<script>
+/* NORMALIZE */
+const cases = /* CASES */;
+const input = document.querySelector('#enquiry');
+const result = document.querySelector('#result');
+for (const enquiry of cases) input.add(new Option(enquiry.company));
+function renderEnquiry() {
+ const item = cases[input.selectedIndex];
+ document.querySelector('#message').textContent = item.message;
+ document.querySelector('#details').textContent = 'Budget: ' + (item.budget || 'Unspecified') + ' · Timeline: ' + (item.timeline || 'Unspecified');
+ result.textContent = 'Choose an enquiry and prepare the lead.';
+}
+input.addEventListener('change', renderEnquiry);
+renderEnquiry();
+document.querySelector('#run').addEventListener('click', () => {
+ const item = cases[input.selectedIndex];
+ const lead = normalizeEnquiry(item, JSON.stringify(item.model));
+ const list = document.createElement('dl');
+ for (const [label, value] of [['Service',lead.service_category], ['Summary',lead.lead_summary], ['Missing details',lead.missing_details || 'None'], ['Status',lead.lead_status], ['Follow-up draft',lead.follow_up_draft]]) {
+  const term = document.createElement('dt');
+  const description = document.createElement('dd');
+  term.textContent = label;
+  description.textContent = value;
+  list.append(term, description);
+ }
+ result.replaceChildren(list);
+});
+</script>
