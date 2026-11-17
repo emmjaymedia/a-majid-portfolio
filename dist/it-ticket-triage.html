@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IT Support Ticket Triage | Abdulmajid Abdurrahim</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f4ee;color:#172b2a;font:16px/1.55 system-ui,sans-serif}main{max-width:1060px;margin:auto;padding:4rem 1.5rem}h1{font-size:clamp(2.7rem,7vw,5rem);letter-spacing:-.065em;line-height:1;margin:.5rem 0 1rem}h2,h3{line-height:1.2}.eyebrow{color:#315f56;font-weight:750}section{margin-top:2rem}.panel{background:#fff;border:1px solid #d8e1dc;border-radius:16px;padding:1.25rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:1rem}label{display:block;font-weight:700}select,button{font:inherit;padding:.6rem .8rem;border-radius:8px}select{width:100%;background:#fff;border:1px solid #82938c;margin:.4rem 0}button{background:#16453b;color:#fff;border:0;cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #ac5816;outline-offset:3px}dt{font-weight:750}dd{margin:0 0 .5rem}small{color:#39564e}a{color:#16453b}li{margin:.35rem 0}</style>
+<main>
+<a href="/">Back to portfolio</a>
+<p class="eyebrow">Workflow automation · Abdulmajid Abdurrahim</p>
+<h1>IT support<br>ticket triage</h1>
+<p>Route everyday support requests to the right team and flag cases that need a person to review them.</p>
+<section class="grid" aria-label="Interactive walkthrough">
+<div class="panel"><h2>Incoming request</h2><label for="ticket">Choose a ticket</label><select id="ticket"></select><p id="description"></p><button id="run">Run triage replay</button><p><small>The replay uses predefined classifier output and runs the same routing rules as the n8n workflow.</small></p></div>
+<div class="panel" aria-live="polite"><h2>Triage result</h2><div id="result">Choose a request and run the replay.</div></div>
+</section>
+<section><h2>How it works</h2><ol><li>n8n sends the ticket text to OpenAI for structured classification.</li><li>Fixed rules assign the queue and flag ambiguous requests, urgent impact, and invalid classifier output for review.</li><li>Google Sheets logs the result by ticket ID so sequential reruns update the existing record.</li></ol><p>The routing and failure checks were exercised locally. Live OpenAI and Google Sheets execution requires connected credentials.</p></section>
+</main>
+<script>
+function route(ticket, result) {
+  const queues = {'Account Access':'Identity','Software':'Applications','Equipment':'Hardware','General Support':'Service Desk'};
+  const valid = result && (Object.hasOwn(queues, result.category) || result.category === 'Unclear')
+    && ['Normal','High','Unknown'].includes(result.urgency)
+    && typeof result.summary === 'string' && result.summary.trim().length > 0;
+  const category = valid ? result.category : 'Unclear';
+  const urgency = valid ? result.urgency : 'Unknown';
+  const reason = !valid ? 'Classifier unavailable or invalid response'
+    : category === 'Unclear' || urgency === 'Unknown' ? 'More information needed'
+    : urgency === 'High' ? 'Confirm urgent impact' : '';
+  return {...ticket, category, urgency, summary: valid ? result.summary.trim().slice(0,240) : '',
+    queue: Object.hasOwn(queues,category) ? queues[category] : 'Service Desk',
+    status: reason ? 'Needs review' : 'Routed', reason};
+}
+const tickets = [["TKT-001","Locked out after replacing my phone","I can no longer complete Microsoft 365 MFA after replacing my phone.","Account Access","Normal"],["TKT-002","Payroll application will not start","The payroll team cannot launch the payroll application and payroll is due today.","Software","High"],["TKT-003","Monitor stays black","My external monitor stays black even after reseating the cable. My laptop screen works.","Equipment","Normal"],["TKT-004","Something is broken","It is broken again. Please help.","Unclear","Unknown"],["TKT-005","How do I reach the help desk?","Where can I find the IT support hours and contact details?","General Support","Normal"]];
+const select = document.querySelector('#ticket');
+const descriptionEl = document.querySelector('#description');
+const resultEl = document.querySelector('#result');
+for (const [id, subject] of tickets) select.add(new Option(id + ' · ' + subject));
+function describe() {
+ descriptionEl.textContent = tickets[select.selectedIndex][2];
+ resultEl.textContent = 'Run the replay to see the triage result.';
+}
+select.addEventListener('change', describe);
+describe();
+document.querySelector('#run').addEventListener('click', () => {
+ const [ticket_id,subject,description,category,urgency] = tickets[select.selectedIndex];
+ const result = route({ticket_id,subject,description},{category,urgency,summary:description});
+ const list = document.createElement('dl');
+ for (const [label,value] of [['Ticket',result.ticket_id],['Category',result.category],['Urgency',result.urgency],['Suggested queue',result.queue],['Status',result.status],['Summary',result.summary],['Review reason',result.reason]]) {
+  if (!value) continue;
+  const term=document.createElement('dt'), detail=document.createElement('dd');
+  term.textContent=label; detail.textContent=value; list.append(term,detail);
+ }
+ resultEl.replaceChildren(list);
+});
+</script>
