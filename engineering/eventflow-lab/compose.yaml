@@ -1,0 +1,15 @@
+services:
+  solace:
+    image: ${SOLACE_IMAGE:-solace/solace-pubsub-standard:latest}
+    shm_size: 1g
+    environment:
+      username_admin_globalaccesslevel: admin
+      username_admin_password: ${SEMP_PASSWORD:?Set SEMP_PASSWORD for the local broker}
+      system_scaling_maxconnectioncount: 100
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8008:8008"
+    volumes:
+      - broker:/var/lib/solace
+volumes:
+  broker:

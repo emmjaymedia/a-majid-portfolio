@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" targetNamespace="urn:eventflow:lab">
+  <bpmn:message id="OnboardingRequested" name="lab.onboarding.requested.v1"/>
+  <bpmn:process id="eventflow-onboarding" name="Synthetic entity onboarding" isExecutable="true">
+    <bpmn:startEvent id="Start"><bpmn:messageEventDefinition messageRef="OnboardingRequested"/></bpmn:startEvent>
+    <bpmn:sequenceFlow id="StartValidation" sourceRef="Start" targetRef="Validate"/>
+    <bpmn:serviceTask id="Validate" name="Validate synthetic entity">
+      <bpmn:extensionElements><zeebe:taskDefinition type="validate-entity" retries="3"/></bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="FinishValidation" sourceRef="Validate" targetRef="Complete"/>
+    <bpmn:endEvent id="Complete"/>
+  </bpmn:process>
+</bpmn:definitions>

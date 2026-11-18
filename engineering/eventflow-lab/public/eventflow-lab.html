@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EventFlow Lab · Messaging Operations</title>
+<style>
+:root{color-scheme:dark;--background:#101827;--panel:#182436;--line:#304158;--text:#f0f6ff;--muted:#a4b5cc;--mint:#84f4c9}*{box-sizing:border-box}body{margin:0;background:var(--background);color:var(--text);font:16px/1.55 system-ui,sans-serif}header,main{width:min(1150px,92%);margin:auto}header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}a{color:var(--mint)}small,p,dt{color:var(--muted)}.tag,code{font:13px ui-monospace,monospace}.tag{color:var(--mint);border:1px solid var(--line);border-radius:30px;padding:6px 12px}h1{font-size:clamp(42px,8vw,88px);line-height:.95;letter-spacing:-.07em;margin:22px 0}h2{font-size:21px;margin:0 0 12px}section{margin:26px 0}.hero{padding:28px 0 8px}.hero p{max-width:650px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}.card{padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px}.stat{font-size:32px;color:var(--text);font-weight:700;margin:4px 0}form{display:flex;flex-wrap:wrap;align-items:end;gap:14px}label{display:grid;gap:5px;color:var(--muted);font-size:14px}select,button{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--background);color:var(--text)}button{background:var(--mint);color:#102922;font-weight:700;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:570px}td,th{padding:10px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:13px}td:last-child{color:var(--mint)}details{margin-top:16px}summary{cursor:pointer}footer{padding-bottom:30px;color:var(--muted)}#feedback{min-height:1.6em}.route{overflow-wrap:anywhere}
+</style></head>
+<body><header><strong>EventFlow Lab</strong><span class="tag" id="mode">Browser simulation</span></header>
+<main>
+<section class="hero"><small>MESSAGING OPERATIONS / PAYMENTS &amp; ONBOARDING</small><h1>Follow the event.</h1><p>Trace a synthetic payment or entity-onboarding request from acceptance to delivery, retry, or rejection. Inspect queue routes and compare completion times with workflow targets.</p><p><a href="https://github.com/emmjaymedia/a-majid-portfolio/tree/master/engineering/eventflow-lab">Source code and operations runbook ↗</a></p></section>
+<section class="grid" aria-label="Workflow metrics">
+<div class="card"><small>Completed / tracked</small><p class="stat" id="completed">0 / 0</p></div>
+<div class="card"><small>Within target / completed</small><p class="stat" id="slo">—</p></div>
+<div class="card"><small>Rejected / retrying</small><p class="stat" id="failures">0 / 0</p></div>
+</section>
+<section class="card"><h2>Submit a synthetic event</h2><form id="publish">
+<label>Workflow<select name="kind"><option value="payment">Payment authorization</option><option value="onboarding">Entity onboarding</option></select></label>
+<label>Delivery scenario<select name="scenario"><option value="normal">Normal delivery</option><option value="transient">Transient failure → retry</option><option value="reject">Invalid request → dead message</option></select></label><button type="submit">Submit event</button></form><div id="feedback" role="status"></div></section>
+<section class="card"><h2>Event journal</h2><div class="table"><table><thead><tr><th>Correlation ID</th><th>Workflow</th><th>Attempts</th><th>Elapsed</th><th>Status</th></tr></thead><tbody id="journal"></tbody></table></div></section>
+<section class="grid" aria-label="Queue routes">
+<div class="card route"><h2>Payment route</h2><code>lab/payment/requested/v1</code><p>Q.PAYMENT.V1 → Q.PAYMENT.DMQ</p><small>Completion target ≤ 2 seconds</small></div>
+<div class="card route"><h2>Onboarding route</h2><code>lab/onboarding/requested/v1</code><p>Q.ONBOARDING.V1 → Q.ONBOARDING.DMQ</p><small>Completion target ≤ 5 seconds</small></div>
+</section>
+<section class="card" aria-labelledby="design-title"><h2 id="design-title">Design &amp; operations</h2>
+<details><summary>Why separate queues?</summary><p>Payment deadlines and onboarding retries create different load patterns. Each workflow has its own durable queue, exact topic subscription and dead-message route, so one backlog can be investigated without interrupting the other.</p></details>
+<details><summary>What happens during an outage?</summary><p>The broker-backed lab stores the event before replying, retries the publish with the same correlation ID and acknowledges processing after the outcome is saved. The public simulation illustrates these outcomes locally.</p></details>
+<details><summary>What would I validate before a rollout?</summary><p>Check queue subscriptions and bindings, test one retry and one rejection, compare latency and spool depth, and exercise backup restore. The repository includes a SEMP provisioning script, Kubernetes deployment resources and an OKE handover runbook.</p></details>
+</section>
+<footer>Metrics cover the latest 100 events. Rejections and pending events appear separately from the completion latency measure.</footer>
+</main>
+<script>
+const events = [];
+const targets = { payment: 2000, onboarding: 5000 };
+const select = id => document.getElementById(id);
+const form = select('publish');
+function render() {
+  const completed = events.filter(event => event.status === 'Completed');
+  const onTime = completed.filter(event => event.updated - event.created <= targets[event.kind]);
+  select('completed').textContent = completed.length + ' / ' + events.length;
+  select('slo').textContent = completed.length ? onTime.length + ' / ' + completed.length : '—';
+  select('failures').textContent = ['Rejected', 'Retrying'].map(status => events.filter(event => event.status === status).length).join(' / ');
+  const rows = events.map(event => {
+    const tr = document.createElement('tr');
+    for (const value of [event.id, event.kind, event.attempts, (event.updated - event.created) + ' ms', event.status]) {
+      const td = document.createElement('td');
+      td.textContent = value;
+      tr.append(td);
+    }
+    return tr;
+  });
+  if (!rows.length) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 5;
+    cell.textContent = 'Submit an event to start a trace.';
+    row.append(cell);
+    rows.push(row);
+  }
+  select('journal').replaceChildren(...rows);
+}
+function simulate(input) {
+  const created = Date.now();
+  const event = { ...input, id: crypto.randomUUID(), created, updated: created, attempts: 0, status: 'Queued' };
+  events.unshift(event);
+  if (events.length > 100) events.pop();
+  render();
+  const transition = status => {
+    event.status = status;
+    event.attempts++;
+    event.updated = Date.now();
+    render();
+  };
+  setTimeout(() => {
+    if (input.scenario === 'transient') {
+      transition('Retrying');
+      setTimeout(() => transition('Completed'), 850);
+    } else {
+      transition(input.scenario === 'reject' ? 'Rejected' : 'Completed');
+    }
+  }, input.kind === 'payment' ? 430 : 700);
+  return event;
+}
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  const button = form.querySelector('button');
+  button.disabled = true;
+  try {
+    const input = Object.fromEntries(new FormData(form));
+    const record = simulate(input);
+    select('feedback').textContent = 'Accepted event ' + record.id;
+  } catch (error) { select('feedback').textContent = error.message; }
+  finally { button.disabled = false; }
+});
+render();
+</script>
+</body></html>
