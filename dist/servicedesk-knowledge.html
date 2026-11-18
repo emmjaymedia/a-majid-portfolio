@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ServiceDesk Knowledge | Abdulmajid Abdurrahim</title>
+<meta name="description" content="An AI engineering case study on role-scoped IT knowledge retrieval, citation evaluation, and human-reviewed ticket creation.">
+<style>
+:root{color-scheme:light;--ink:#132b30;--muted:#486360;--rule:#c8dbd4;--surface:#fff;--bg:#eff5f0;--accent:#165747}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:35px 24px 64px}a{color:var(--accent);text-underline-offset:4px}a:focus-visible{outline:3px solid #167d9b;outline-offset:4px}header{padding:62px 0 36px}h1{font-size:clamp(42px,8vw,84px);line-height:1;letter-spacing:-.065em;margin:.1em 0 .24em}h2{font-size:clamp(24px,4vw,34px);line-height:1.12;letter-spacing:-.04em;margin:0 0 14px}h3{margin:0 0 8px}p{margin:0 0 14px;color:var(--muted)}.intro{font-size:clamp(18px,3vw,24px);max-width:660px}.label{color:var(--accent);font-weight:750;font-size:13px;letter-spacing:.09em;text-transform:uppercase}.links{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}.button{background:var(--accent);color:white;border-radius:8px;padding:10px 15px;font-weight:650;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card,section{background:var(--surface);border:1px solid var(--rule);border-radius:15px;padding:clamp(18px,4vw,28px)}section{margin-top:16px}.metric{font-size:36px;font-weight:750;letter-spacing:-.06em;line-height:1.1;color:var(--ink)}.grid p:last-child,section p:last-child{margin-bottom:0}details{border-top:1px solid var(--rule);padding:12px 0}summary{cursor:pointer;font-weight:700}details p{margin:8px 0 0}cite{display:block;color:var(--accent);margin-top:6px;font-style:normal}@media(max-width:650px){.grid{grid-template-columns:1fr}header{padding:40px 0 26px}}
+</style>
+</head>
+<body><main>
+<a href="/#hats">← Back to portfolio</a>
+<header><p class="label">AI engineering case study</p><h1>ServiceDesk Knowledge</h1>
+<p class="intro">An IT support workspace that answers employee questions from approved guidance and turns unresolved issues into editable support tickets.</p>
+<p>Python · FastAPI · SQLite · Optional PostgreSQL / pgvector and OpenAI</p>
+<div class="links"><a class="button" href="https://github.com/emmjaymedia/it-knowledge-ticket-assistant">View source and run locally ↗</a></div></header>
+<div class="grid" aria-label="Local evaluation results">
+<div class="card"><p class="metric">13 / 13</p><p>Expected citation or correct deferral with local vector retrieval</p></div>
+<div class="card"><p class="metric">11 / 13</p><p>Expected citation or correct deferral with the keyword baseline</p></div>
+<div class="card"><p class="metric">4 passed</p><p>API tests covering cited answers, deferral, role access, and ticket retries</p></div>
+</div>
+<section aria-labelledby="problem"><h2 id="problem">The problem</h2><p>Employees need to know which support guidance applies to their issue. IT teams need a clear handoff when an answer is missing, with restricted procedures kept within the right role.</p></section>
+<section aria-labelledby="workflow"><h2 id="workflow">Three example outcomes</h2>
+<details open><summary>VPN connection timeout</summary><p>Confirm internet access, restart the VPN client, and retry on a different network. If the timeout persists, escalate with the error code.</p><cite>VPN connection troubleshooting · Connection timeout</cite></details>
+<details><summary>Restricted recovery guide</summary><p>An employee receives no restricted excerpt. The API filters retrieval candidates by role before choosing a citation.</p></details>
+<details><summary>Issue without matching guidance</summary><p>The workspace suggests IT review and opens a draft. The employee can edit the title, description, and queue before submitting. Retrying the same submission returns the same ticket ID.</p></details></section>
+<section aria-labelledby="tradeoff"><h2 id="tradeoff">What changed after testing</h2><p>Keyword matching on article headings confused VPN sign-in prompts with connection timeouts. Searching full sections with local vectors brought the relevant troubleshooting text into the comparison. The app returns the original excerpt and its citation so readers can see exactly what supports the answer.</p><p>The synthetic evaluation measures local retrieval and deferral. A real rollout would need identity-provider integration, per-user ticket ownership, and evaluation on a larger labeled set. The optional hosted model and database paths were outside this evaluation.</p><a href="https://github.com/emmjaymedia/it-knowledge-ticket-assistant/blob/master/evaluation.json">Inspect the benchmark results ↗</a></section>
+</main></body></html>
