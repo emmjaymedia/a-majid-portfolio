@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bilingual Document Intake | Abdulmajid Abdurrahim</title>
+<meta name="description" content="Extracts fields from English and Arabic invoice images, checks totals, and sends records to a review queue.">
+<style>
+:root{color-scheme:light;--ink:#132b30;--muted:#486360;--rule:#c8dbd4;--surface:#fff;--bg:#eff5f0;--accent:#165747}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:35px 24px 64px}a{color:var(--accent);text-underline-offset:4px}a:focus-visible{outline:3px solid #167d9b;outline-offset:4px}header{padding:62px 0 36px}h1{font-size:clamp(42px,8vw,84px);line-height:1;letter-spacing:-.065em;margin:.1em 0 .24em}h2{font-size:clamp(24px,4vw,34px);line-height:1.12;letter-spacing:-.04em;margin:0 0 14px}h3{margin:0 0 8px}p{margin:0 0 14px;color:var(--muted)}.intro{font-size:clamp(18px,3vw,24px);max-width:660px}.label{color:var(--accent);font-weight:750;font-size:13px;letter-spacing:.09em;text-transform:uppercase}.links{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}.button{background:var(--accent);color:white;border-radius:8px;padding:10px 15px;font-weight:650;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card,section{background:var(--surface);border:1px solid var(--rule);border-radius:15px;padding:clamp(18px,4vw,28px)}section{margin-top:16px}.metric{font-size:36px;font-weight:750;letter-spacing:-.06em;line-height:1.1;color:var(--ink)}.grid p:last-child,section p:last-child{margin-bottom:0}details{border-top:1px solid var(--rule);padding:12px 0}summary{cursor:pointer;font-weight:700}details p{margin:8px 0 0}cite{display:block;color:var(--accent);margin-top:6px;font-style:normal}@media(max-width:650px){.grid{grid-template-columns:1fr}header{padding:40px 0 26px}}
+</style>
+</head>
+<body><main>
+<a href="/#automation">← Back to portfolio projects</a>
+<header><p class="label">AI engineering case study</p><h1>Bilingual Document Intake</h1>
+<p class="intro">Extracts fields from English and Arabic invoice images, checks totals, and sends records to a review queue.</p><p>Python · FastAPI · Tesseract OCR · SQLite</p>
+<div class="links"><a class="button" href="https://github.com/emmjaymedia/bilingual-document-intake">View source and run locally ↗</a></div></header>
+<div class="grid" aria-label="Verified results"><div class="card"><p class="metric">4 / 4</p><p>Expected fields on the English sample</p></div><div class="card"><p class="metric">4 / 4</p><p>Expected fields on the Arabic sample</p></div><div class="card"><p class="metric">4 passed</p><p>Integration and parsing tests</p></div></div>
+<section aria-labelledby="problem"><h2 id="problem">The problem</h2><p>Scanned invoices need structured fields before they can be reviewed. OCR can leave fields blank or return an incorrect amount, so reviewers need the extracted text and editable values together.</p></section>
+<section aria-labelledby="workflow"><h2 id="workflow">How it works</h2>
+<details open><summary>Queue an English or Arabic invoice</summary><p>Upload a PNG or JPEG. A background worker claims the job from SQLite and runs local OCR with the selected language.</p></details>
+<details><summary>Review the extracted fields</summary><p>Inspect the raw OCR text alongside invoice number, subtotal, tax, and total. Missing or conflicting fields remain available for correction.</p></details>
+<details><summary>Approve only when totals balance</summary><p>The reviewer confirms the final values. The API validates subtotal plus tax against the total using decimal arithmetic.</p></details>
+</section>
+<section aria-labelledby="decisions"><h2 id="decisions">Engineering decisions</h2><p>The queue persists across restarts. If a worker stops mid-job, an expired lease allows another attempt. OCR runs locally, and the worker discards the source image once processing finishes.</p></section>
+<section aria-labelledby="evaluation"><h2 id="evaluation">What was tested</h2><p>The recorded benchmark used two clean synthetic scans, one per language. Both produced all four expected fields. That result verifies the included examples and leaves production accuracy to be evaluated on a larger dataset.</p>
+<a href="https://github.com/emmjaymedia/bilingual-document-intake/blob/master/evaluation.jsonl">Inspect the OCR benchmark results ↗</a></section>
+</main></body></html>

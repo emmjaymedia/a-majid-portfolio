@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sales Enquiry Agent | Abdulmajid Abdurrahim</title>
+<meta name="description" content="Turns incoming enquiries into editable lead proposals and follow-up drafts, with approval before any CRM write.">
+<style>
+:root{color-scheme:light;--ink:#132b30;--muted:#486360;--rule:#c8dbd4;--surface:#fff;--bg:#eff5f0;--accent:#165747}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:35px 24px 64px}a{color:var(--accent);text-underline-offset:4px}a:focus-visible{outline:3px solid #167d9b;outline-offset:4px}header{padding:62px 0 36px}h1{font-size:clamp(42px,8vw,84px);line-height:1;letter-spacing:-.065em;margin:.1em 0 .24em}h2{font-size:clamp(24px,4vw,34px);line-height:1.12;letter-spacing:-.04em;margin:0 0 14px}h3{margin:0 0 8px}p{margin:0 0 14px;color:var(--muted)}.intro{font-size:clamp(18px,3vw,24px);max-width:660px}.label{color:var(--accent);font-weight:750;font-size:13px;letter-spacing:.09em;text-transform:uppercase}.links{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px}.button{background:var(--accent);color:white;border-radius:8px;padding:10px 15px;font-weight:650;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card,section{background:var(--surface);border:1px solid var(--rule);border-radius:15px;padding:clamp(18px,4vw,28px)}section{margin-top:16px}.metric{font-size:36px;font-weight:750;letter-spacing:-.06em;line-height:1.1;color:var(--ink)}.grid p:last-child,section p:last-child{margin-bottom:0}details{border-top:1px solid var(--rule);padding:12px 0}summary{cursor:pointer;font-weight:700}details p{margin:8px 0 0}cite{display:block;color:var(--accent);margin-top:6px;font-style:normal}@media(max-width:650px){.grid{grid-template-columns:1fr}header{padding:40px 0 26px}}
+</style>
+</head>
+<body><main>
+<a href="/#automation">← Back to portfolio projects</a>
+<header><p class="label">AI engineering case study</p><h1>Sales Enquiry Agent</h1>
+<p class="intro">Turns incoming enquiries into editable lead proposals and follow-up drafts, with approval before any CRM write.</p><p>Python · FastAPI · SQLite · OpenAI tool calling</p>
+<div class="links"><a class="button" href="https://github.com/emmjaymedia/sales-enquiry-agent">View source and run locally ↗</a></div></header>
+<div class="grid" aria-label="Verified results"><div class="card"><p class="metric">4 passed</p><p>Integration tests</p></div><div class="card"><p class="metric">1 lead</p><p>From two concurrent approvals for the same email</p></div><div class="card"><p class="metric">0 writes</p><p>Before reviewer approval</p></div></div>
+<section aria-labelledby="problem"><h2 id="problem">The problem</h2><p>Sales messages arrive as unstructured text. A reviewer needs the contact details, a suggested follow-up, and a duplicate check before adding the lead to the CRM.</p></section>
+<section aria-labelledby="workflow"><h2 id="workflow">How it works</h2>
+<details open><summary>Extract the proposed lead</summary><p>A sample enquiry supplies a name, email, and interest. The workflow normalizes the email and prepares a follow-up for review.</p></details>
+<details><summary>Review before committing</summary><p>The reviewer can edit the proposed lead fields. The extraction tool only proposes data, and the approval endpoint is the only route that writes a lead.</p></details>
+<details><summary>Handle duplicates and retries</summary><p>Approval rechecks the normalized email inside the write transaction. Concurrent approvals resolve to one lead. Identical retries return the original result.</p></details>
+</section>
+<section aria-labelledby="decisions"><h2 id="decisions">Engineering decisions</h2><p>The CRM makes the final duplicate decision inside the transaction, even if two drafts initially appear unique. This keeps the approval flow consistent when several reviewers act at once.</p></section>
+<section aria-labelledby="evaluation"><h2 id="evaluation">What was tested</h2><p>Four integration tests covered extraction, ambiguous contacts, concurrent approval, and untrusted model output. The CRM is a local sandbox. The optional OpenAI path was tested using a mocked response.</p>
+<a href="https://github.com/emmjaymedia/sales-enquiry-agent/blob/master/test_app.py">Inspect the integration tests ↗</a></section>
+</main></body></html>
