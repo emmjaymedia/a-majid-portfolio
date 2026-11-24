@@ -1,4 +1,49 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project case study — A. Majid</title><link rel="stylesheet" href="/cms.css"></head><body class="study"><header><a href="/#projects">← All projects</a><a href="/">A. Majid</a></header><main id="study" aria-live="polite"><p>Loading project…</p></main><footer>Have a project in mind? <a href="/#contact">Let’s talk ↗</a></footer><script type="module">
-import {projects,study} from '/cms-data.js';
-const root=document.querySelector('#study');try{const slug=decodeURIComponent(location.pathname.split('/').filter(Boolean).pop());const p=(await projects()).find(p=>p.slug===slug&&p.published);if(!p){document.title='Project not found — A. Majid';root.innerHTML='<h1>Project not found</h1><p>This project may have moved or is not published yet.</p><a href="/#projects">Back to projects</a>';}else{document.title=p.title+' — A. Majid';root.innerHTML=study(p);}}catch{root.innerHTML='<h1>Unable to load this project</h1><p>Please refresh the page or try again later.</p>';}
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Project case study — A. Majid</title>
+  <link rel="stylesheet" href="/portfolio.css">
+</head>
+<body class="case-study">
+  <a class="skip-link" href="#study">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Main navigation">
+      <a class="brand" href="/">A. Majid</a>
+      <div class="nav-side"><a href="/#projects">All work</a><a href="/#contact">Contact</a></div>
+    </nav>
+  </header>
+  <main id="study" class="shell" aria-live="polite"><p>Loading project…</p></main>
+  <footer class="study-footer shell"><a href="/#projects">← Back to selected work</a></footer>
+  <script type="module">
+    import {projects, study} from '/cms-data.js';
+    import {darloStory, featuredStudies} from '/featured-studies.js';
+
+    const root = document.querySelector('#study');
+    try {
+      const slug = decodeURIComponent(location.pathname.split('/').filter(Boolean).pop());
+      let project = featuredStudies.get(slug);
+      if (!project) {
+        project = (await projects()).find(item => item.slug === slug && item.published);
+      }
+      if (!project) {
+        document.title = 'Project not found — A. Majid';
+        root.innerHTML = '<h1>Project not found</h1><p>This project may have moved or is awaiting publication.</p>';
+      } else {
+        if (slug === 'dalo-crm') {
+          const title = project.title === 'Dalo CRM' ? 'Darlo CRM' : project.title;
+          project = {...project, ...darloStory, title};
+        }
+        document.title = project.title + ' — A. Majid';
+        root.innerHTML = study(project);
+        const section = document.getElementById(location.hash.slice(1));
+        if (section && root.contains(section)) section.scrollIntoView();
+      }
+    } catch (error) {
+      console.error(error);
+      root.innerHTML = '<h1>Unable to load this project</h1><p>Please refresh the page or come back later.</p>';
+    }
+  </script>
+</body>
+</html>

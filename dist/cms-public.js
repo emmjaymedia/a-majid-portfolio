@@ -13,4 +13,21 @@ function projectCard(p,i){
  return `<article class="project" style="z-index:${i+1}"><a class="project-link" href="${e(d.url)}" ${d.external?'target="_blank" rel="noopener noreferrer"':''} aria-label="${e(p.title)} — ${e(d.label)}${d.external?' (opens in a new tab)':''}"><div class="project-media project-media-image" style="background:#f6f0e7"><img style="object-fit:contain" src="${e(safeURL(p.cover,true))}" alt="${e(p.alt)}" loading="lazy" decoding="async"><span class="project-open" aria-hidden="true">${e(d.label)} ↗</span></div><div class="project-meta"><h3>${e(p.title)}</h3><span>${e(p.category)} // ${e(p.year)}</span></div></a></article>`;
 }
 
-try{const list=await projects();document.querySelector('.project-list').innerHTML=list.filter(p=>p.published).map(projectCard).join('');window.dispatchEvent(new Event('projectsupdated'));}catch(error){console.error('Using built-in portfolio projects:',error.message);}
+try {
+ const list = (await projects()).filter(project => project.published);
+ document.querySelector('.project-list').innerHTML = list.map(projectCard).join('');
+ const designFeature = document.querySelector('#product-design');
+ const darlo = list.find(project => project.slug === 'dalo-crm');
+ if (darlo) {
+  designFeature.querySelector('h3').firstChild.textContent = (darlo.title === 'Dalo CRM' ? 'Darlo CRM' : darlo.title) + ' ';
+  const image = designFeature.querySelector('img');
+  const cover = darlo.cover && safeURL(darlo.cover, true);
+  if (cover) image.src = cover;
+  image.alt = darlo.alt || '';
+ } else {
+  designFeature.hidden = true;
+  document.querySelector('a[href="#product-design"]').href = '#project-archive';
+ }
+} catch (error) {
+ console.error('Using built-in portfolio projects:', error.message);
+}
